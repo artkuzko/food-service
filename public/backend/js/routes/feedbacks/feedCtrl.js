@@ -1,8 +1,8 @@
 var app = angular.module('foodService');
 
-app.controller('FeedBacksController', ['$scope', '$http', FeedBacksController]);
+app.controller('FeedBacksController', ['$scope', '$http', '$routeParams', '$location', FeedBacksController]);
 
-  function FeedBacksController($scope, $http) {
+  function FeedBacksController($scope, $http, $routeParams, $location) {
     var vm = this;
     vm.feedbacks = [];
 
@@ -12,4 +12,18 @@ app.controller('FeedBacksController', ['$scope', '$http', FeedBacksController]);
           vm.feedbacks = res.data.feeds;
         }
       });
+
+    vm.deleteFeed = function(id){
+      console.log($location.path());
+      $http.delete('/api/feedback/' + id)
+
+          .then(function(res){
+            console.log(res.data);
+            if(res.data.success) {
+              vm.feedbacks = vm.feedbacks.filter(function(el){
+                return el._id !== id;
+              })
+            }
+          })
+    }
   }
